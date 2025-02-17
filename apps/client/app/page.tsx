@@ -5,18 +5,13 @@ import { useEffect, useState, ChangeEvent, FormEvent, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { MessageCircleIcon, Loader2, Copy } from 'lucide-react';
 import { toast } from 'sonner';
+import MessageGroup from '@/components/MessageGroup';
 
-interface Message {
+export interface Message {
     id: string;
     content: string;
     senderId: string;
@@ -47,52 +42,7 @@ interface ClientToServerEvents {
 }
 
 const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL;
-const socket: Socket<ServerToClientEvents, ClientToServerEvents> =
-    io(SOCKET_URL);
-
-const MessageGroup = ({
-    messages,
-    userId,
-}: {
-    messages: Message[];
-    userId: string;
-}) => {
-    return (
-        <>
-            {messages.map((msg, index) => {
-                const isFirstInGroup =
-                    index === 0 ||
-                    messages[index - 1]?.senderId !== msg.senderId;
-
-                return (
-                    <div
-                        key={msg.id}
-                        className={`flex flex-col ${
-                            msg.senderId === userId
-                                ? 'items-end'
-                                : 'items-start'
-                        }`}
-                    >
-                        {isFirstInGroup && (
-                            <div className="text-xs text-muted-foreground mb-0.5">
-                                {msg.sender}
-                            </div>
-                        )}
-                        <div
-                            className={`inline-block rounded-lg px-3 py-1.5 break-words ${
-                                msg.senderId === userId
-                                    ? 'bg-primary text-primary-foreground'
-                                    : 'bg-muted'
-                            } ${!isFirstInGroup ? 'mt-0.5' : 'mt-1.5'}`}
-                        >
-                            {msg.content}
-                        </div>
-                    </div>
-                );
-            })}
-        </>
-    );
-};
+const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(SOCKET_URL);
 
 export default function Page() {
     const [roomCode, setRoomCode] = useState<string>('');
@@ -191,15 +141,13 @@ export default function Page() {
             return;
         }
 
-        socket.emit(
-            'join-room',
-            JSON.stringify({ roomId: inputCode.toUpperCase(), name }),
-        );
+        socket.emit('join-room', JSON.stringify({ roomId: inputCode.toUpperCase(), name }));
     };
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setInputCode(e.target.value);
     };
+
     const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
         setName(e.target.value);
     };
@@ -241,10 +189,10 @@ export default function Page() {
                     <CardHeader className="space-y-1">
                         <CardTitle className="text-2xl flex items-center gap-2 font-bold">
                             <MessageCircleIcon className="w-6 h-6" />
-                            Real Time Chat
+                            Chat Box
                         </CardTitle>
                         <CardDescription>
-                            temporary room that expires after all users exit
+                            create a room and share the code to start chatting
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -303,9 +251,7 @@ export default function Page() {
                                             <Button
                                                 variant="ghost"
                                                 size="icon"
-                                                onClick={() =>
-                                                    copyToClipboard(roomCode)
-                                                }
+                                                onClick={() => copyToClipboard(roomCode)}
                                                 className="h-8 w-8"
                                             >
                                                 <Copy className="h-4 w-4" />
@@ -320,16 +266,12 @@ export default function Page() {
                                     <div className="flex items-center gap-2">
                                         <span>
                                             Room Code:{' '}
-                                            <span className="font-mono font-bold">
-                                                {roomCode}
-                                            </span>
+                                            <span className="font-mono font-bold">{roomCode}</span>
                                         </span>
                                         <Button
                                             variant="ghost"
                                             size="icon"
-                                            onClick={() =>
-                                                copyToClipboard(roomCode)
-                                            }
+                                            onClick={() => copyToClipboard(roomCode)}
                                             className="h-6 w-6"
                                         >
                                             <Copy className="h-3 w-3" />
@@ -339,16 +281,10 @@ export default function Page() {
                                 </div>
 
                                 <div className="h-[430px] overflow-y-auto border rounded-lg p-4 space-y-2">
-                                    <MessageGroup
-                                        messages={messages}
-                                        userId={userId}
-                                    />
+                                    <MessageGroup messages={messages} userId={userId} />
                                     <div ref={messagesEndRef} />
                                 </div>
-                                <form
-                                    onSubmit={sendMessage}
-                                    className="flex gap-2"
-                                >
+                                <form onSubmit={sendMessage} className="flex gap-2">
                                     <Input
                                         value={message}
                                         onChange={handleMessageChange}
@@ -356,6 +292,7 @@ export default function Page() {
                                         className="text-lg py-5"
                                     />
                                     <Button
+                                        variant="purple"
                                         type="submit"
                                         size="lg"
                                         className="px-8"

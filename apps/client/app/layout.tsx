@@ -11,8 +11,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-    title: 'Real Time Chat',
-    description: 'A real-time chat application with temporary rooms',
+    title: 'Chat Box',
+    description: 'chat app with rooms',
 };
 
 export default function RootLayout({
@@ -23,13 +23,10 @@ export default function RootLayout({
     return (
         <html lang="en" suppressHydrationWarning>
             <head />
-            <body
-                suppressHydrationWarning
-                className={`${jetbrainsMono.variable} font-mono`}
-            >
+            <body suppressHydrationWarning className={`${jetbrainsMono.variable} font-mono`}>
                 <ThemeProvider
                     attribute="class"
-                    defaultTheme="system"
+                    defaultTheme="dark"
                     enableSystem
                     disableTransitionOnChange
                 >

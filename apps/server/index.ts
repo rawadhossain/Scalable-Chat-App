@@ -12,7 +12,7 @@ interface Message {
 }
 
 interface RoomData {
-    users: Set<string>;
+    users: Set<string>; //A Set (collection of unique values) to store connected users.
     messages: Message[];
     lastActive: number;
 }
@@ -27,7 +27,8 @@ const io = new Server(httpServer, {
     },
 });
 
-const rooms = new Map<string, RoomData>();
+//Each room has a unique key (roomCode) and contains a RoomData object with users, messages, and activity time.
+const rooms = new Map<string, RoomData>(); //Map used to store active chat rooms.
 
 io.on('connection', (socket) => {
     console.log('User connected:', socket.id);
@@ -47,7 +48,7 @@ io.on('connection', (socket) => {
     socket.on('join-room', (data) => {
         const parsedData = JSON.parse(data);
         const roomCode = parsedData.roomId;
-        const room = rooms.get(roomCode);
+        const room = rooms.get(roomCode); // Retrieve the room data from the map using key(roomcode)
 
         if (!room) {
             socket.emit('error', 'Room not found');
