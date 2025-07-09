@@ -1,8 +1,24 @@
 # Turborepo starter
 
-This is an official starter Turborepo.
+## Project Demo
+![alt text](apps\client\public\image1.png)
+![alt text](apps\client\public\image2.png)
 
-## Using this example
+## Overall Architecture (Monorepo)
+```
+monorepo/
+│
+├── apps/
+│   ├── client/      ← Next.js frontend app
+│   └── server/      ← Express + Socket.IO WebSocket backend
+│
+├── packages/        ← Shared code or components
+├── turbo.json       ← Task pipeline config for monorepo
+└── package.json     ← Root-level workspace + script definitions
+```
+<br>
+
+## To create Turborepo
 
 Run the following command:
 
