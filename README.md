@@ -1,8 +1,8 @@
 # Turborepo starter
 
 ## Project Demo
-![alt text](apps\client\public\image1.png)
-![alt text](apps\client\public\image2.png)
+![alt text](apps/client/public/image1.png)
+![alt text](apps/client/public/image2.png)
 
 ## Overall Architecture (Monorepo)
 ```
